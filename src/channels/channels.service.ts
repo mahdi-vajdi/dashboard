@@ -28,9 +28,7 @@ export class ChannelsService {
   }
 
   async findAll(currentUser: User) {
-    return this.channelsRepository.findAllByUserId(
-      currentUser._id.toHexString(),
-    );
+    return this.channelsRepository.findAllByUserId(currentUser._id);
   }
 
   async findOne(id: string) {

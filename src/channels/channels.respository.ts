@@ -36,10 +36,10 @@ export class ChannelsRepository {
     }
   }
 
-  async findAllByUserId(userId: string) {
+  async findAllByUserId(userId: Types.ObjectId) {
     try {
       return await this.channelModel
-        .find({ owner: new Types.ObjectId(userId) })
+        .find({ owner: new Types.ObjectId(userId) }, {}, { lean: true })
         .exec();
     } catch (error) {
       throw new InternalServerErrorException({
@@ -51,7 +51,9 @@ export class ChannelsRepository {
 
   async findOneById(id: string) {
     try {
-      return await this.channelModel.findById(new Types.ObjectId(id)).exec();
+      return await this.channelModel
+        .findById(new Types.ObjectId(id), {}, { lean: true })
+        .exec();
     } catch (error) {
       throw new InternalServerErrorException({
         message: 'Something went wrong',
@@ -72,6 +74,7 @@ export class ChannelsRepository {
         this.logger.warn(`Channel not found with id: ${_id}`);
         throw new NotFoundException('Cahnnel not found');
       }
+      return updatedChannel;
     } catch (error) {
       throw new InternalServerErrorException({
         message: 'Could not update channel',
