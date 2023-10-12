@@ -3,7 +3,7 @@ import { SignupDto } from './dto/signup.dto';
 import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { ResponseSignin } from './interfaces/response-signin.interface';
-import { User } from 'src/users/interfaces/user.interface';
+import { User } from 'src/users/models/user.schema';
 
 export type AuthPayload = {
   email: string;
@@ -23,7 +23,7 @@ export class AuthService {
     return {
       message: 'Signup Successfull',
       email: createdUser.email,
-      userId: createdUser.id,
+      userId: createdUser._id.toHexString(),
       access_token: signinObject.access_token,
     };
   }
@@ -31,13 +31,13 @@ export class AuthService {
   signin(user: User): ResponseSignin {
     const payload: AuthPayload = {
       email: user.email,
-      sub: user.id,
+      sub: user._id.toHexString(),
     };
 
     return {
       message: 'Signin Successfull',
       email: user.email,
-      userId: user.id,
+      userId: user._id.toHexString(),
       access_token: this.jwtService.sign(payload),
     };
   }

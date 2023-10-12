@@ -12,8 +12,8 @@ import { ChannelsService } from './channels.service';
 import { CreateChannelDto } from './dto/create-channel.dto';
 import { UpdateChannelDto } from './dto/update-channel.dto';
 import { Request } from 'express';
-import { User } from 'src/users/interfaces/user.interface';
 import { JwtAuthGuard } from 'src/auth/guards/http-jwt.guard';
+import { User } from 'src/users/models/user.schema';
 
 @UseGuards(JwtAuthGuard)
 @Controller('channels')

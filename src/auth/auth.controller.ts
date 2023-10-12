@@ -3,7 +3,7 @@ import { AuthService } from './auth.service';
 import { SignupDto } from './dto/signup.dto';
 import { Request } from 'express';
 import { LocalAuthGuard } from './guards/local.guard';
-import { User } from 'src/users/interfaces/user.interface';
+import { User } from 'src/users/models/user.schema';
 
 @Controller('auth')
 export class AuthController {

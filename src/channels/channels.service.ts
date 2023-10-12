@@ -3,9 +3,8 @@ import { CreateChannelDto } from './dto/create-channel.dto';
 import { UpdateChannelDto } from './dto/update-channel.dto';
 import { ChannelsRepository } from './channels.respository';
 import * as crypto from 'crypto';
-import { User } from 'src/users/interfaces/user.interface';
-import { Types } from 'mongoose';
 import { channelDefaultSetting } from './channel-dafault-setting';
+import { User } from 'src/users/models/user.schema';
 
 @Injectable()
 export class ChannelsService {
@@ -18,7 +17,7 @@ export class ChannelsService {
     return this.channelsRepository.create({
       createdAt: now,
       updatedAt: now,
-      owner: new Types.ObjectId(currentUser.id),
+      owner: currentUser._id,
       title: createChannelDto.title,
       url: createChannelDto.url,
       token: crypto.randomUUID(),
@@ -29,7 +28,9 @@ export class ChannelsService {
   }
 
   async findAll(currentUser: User) {
-    return this.channelsRepository.findAllByUserId(currentUser.id);
+    return this.channelsRepository.findAllByUserId(
+      currentUser._id.toHexString(),
+    );
   }
 
   async findOne(id: string) {

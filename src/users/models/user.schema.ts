@@ -4,7 +4,7 @@ import { SchemaTypes, Types } from 'mongoose';
 export const USER_COLLECTION_NAME = 'users';
 
 @Schema({ collection: USER_COLLECTION_NAME, versionKey: false })
-export class UserDocument {
+export class User {
   @Prop({ type: SchemaTypes.ObjectId })
   _id: Types.ObjectId;
 
@@ -27,4 +27,4 @@ export class UserDocument {
   password: string;
 }
 
-export const UserSchema = SchemaFactory.createForClass(UserDocument);
+export const UserSchema = SchemaFactory.createForClass(User);
