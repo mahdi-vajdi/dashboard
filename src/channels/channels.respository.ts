@@ -39,12 +39,12 @@ export class ChannelsRepository {
   async findAllByUserId(userId: Types.ObjectId) {
     try {
       return await this.channelModel
-        .find({ owner: new Types.ObjectId(userId) }, {}, { lean: true })
+        .find({ owner: userId }, {}, { lean: true })
         .exec();
     } catch (error) {
       throw new InternalServerErrorException({
         message: 'Something went wrong',
-        error: error,
+        error,
       });
     }
   }
@@ -57,7 +57,7 @@ export class ChannelsRepository {
     } catch (error) {
       throw new InternalServerErrorException({
         message: 'Something went wrong',
-        error: error,
+        error,
       });
     }
   }

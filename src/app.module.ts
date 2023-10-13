@@ -7,6 +7,7 @@ import * as Joi from 'joi';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { ChannelsModule } from './channels/channels.module';
+import { OperatorsModule } from './operators/operators.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { ChannelsModule } from './channels/channels.module';
     UsersModule,
     AuthModule,
     ChannelsModule,
+    OperatorsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
