@@ -5,15 +5,16 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { CHANNEL_COLLECTION_NAME, Channel } from './models/channel.schema';
+import { Channel } from './models/channel.schema';
 import { Model, Types, UpdateQuery } from 'mongoose';
+import { Operator } from 'src/operators/models/operator.schema';
 
 @Injectable()
 export class ChannelsRepository {
   protected readonly logger = new Logger(ChannelsRepository.name);
 
   constructor(
-    @InjectModel(CHANNEL_COLLECTION_NAME)
+    @InjectModel(Channel.name)
     private readonly channelModel: Model<Channel>,
   ) {}
 
@@ -40,6 +41,7 @@ export class ChannelsRepository {
     try {
       return await this.channelModel
         .find({ owner: userId }, {}, { lean: true })
+        .populate<{ operators: Operator }>('operators')
         .exec();
     } catch (error) {
       throw new InternalServerErrorException({
@@ -51,9 +53,12 @@ export class ChannelsRepository {
 
   async findOneById(id: string) {
     try {
-      return await this.channelModel
+      const channels = await this.channelModel
         .findById(new Types.ObjectId(id), {}, { lean: true })
+        .populate<{ operators: Operator }>('operators')
         .exec();
+      console.log(channels);
+      return channels;
     } catch (error) {
       throw new InternalServerErrorException({
         message: 'Something went wrong',

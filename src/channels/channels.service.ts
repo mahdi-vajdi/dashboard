@@ -5,7 +5,6 @@ import { ChannelsRepository } from './channels.respository';
 import * as crypto from 'crypto';
 import { channelDefaultSetting } from './channel-dafault-setting';
 import { User } from 'src/users/models/user.schema';
-import { Channel } from './models/channel.schema';
 import { OperatorsService } from 'src/operators/operators.service';
 
 @Injectable()
@@ -36,7 +35,7 @@ export class ChannelsService {
     });
   }
 
-  async findAll(currentUser: User): Promise<Channel[]> {
+  async findAll(currentUser: User) {
     return this.channelsRepository.findAllByUserId(currentUser._id);
   }
   async findOne(id: string) {
