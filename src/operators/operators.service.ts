@@ -17,7 +17,6 @@ export class OperatorsService {
       createOperatorDto.email,
       createOperatorDto.phone,
     );
-    console.log('exists', exists);
     if (exists) throw new ConflictException('Email or phone is duplicate');
 
     return this.operatorsRepository.create({

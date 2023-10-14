@@ -1,4 +1,5 @@
 import {
+  IsArray,
   IsEmail,
   IsEnum,
   IsMongoId,
@@ -29,7 +30,8 @@ export class CreateOperatorDto {
   password: string;
 
   @IsOptional()
-  @IsMongoId({ each: true, message: 'give me some mongodb ids!' })
+  @IsArray()
+  @IsMongoId({ each: true })
   channelIds: string[];
 
   @IsEnum(OperatorRoles)

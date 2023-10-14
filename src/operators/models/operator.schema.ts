@@ -36,7 +36,7 @@ export class Operator {
   @Prop()
   online: boolean;
 
-  @Prop({ type: [SchemaTypes.ObjectId] })
+  @Prop({ type: [{ type: SchemaTypes.ObjectId }] })
   channels: Types.ObjectId[]; // Reference to the websites collection
 
   @Prop()
