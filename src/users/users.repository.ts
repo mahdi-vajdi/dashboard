@@ -53,4 +53,8 @@ export class UsersRepository {
       });
     }
   }
+
+  async userExists(email: string, phone: string) {
+    return this.userModel.exists({ $or: [{ email }, { phone }] });
+  }
 }

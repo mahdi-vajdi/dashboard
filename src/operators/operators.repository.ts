@@ -102,4 +102,10 @@ export class OperatorsRepository {
     }
     return deletedOperator;
   }
+
+  async operatorsExists(email: string, phone: string) {
+    return this.operatorModel.exists({
+      $or: [{ email }, { phone }],
+    });
+  }
 }

@@ -21,7 +21,7 @@ export class User {
   email: string;
 
   @Prop()
-  mobile: string;
+  phone: string;
 
   @Prop()
   password: string;

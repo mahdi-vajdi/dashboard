@@ -1,7 +1,7 @@
 import {
   IsEmail,
-  IsMobilePhone,
   IsNotEmpty,
+  IsPhoneNumber,
   IsString,
   IsStrongPassword,
 } from 'class-validator';
@@ -18,8 +18,8 @@ export class SignupDto {
   @IsEmail()
   email: string;
 
-  @IsMobilePhone()
-  mobile: string;
+  @IsPhoneNumber()
+  phone: string;
 
   @IsStrongPassword({})
   password: string;

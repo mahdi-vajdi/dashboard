@@ -19,7 +19,7 @@ export class CreateUserDto {
   email: string;
 
   @IsMobilePhone()
-  mobile: string;
+  phone: string;
 
   @IsStrongPassword({})
   password: string;
