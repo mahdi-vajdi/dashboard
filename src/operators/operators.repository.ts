@@ -1,4 +1,5 @@
 import {
+  Injectable,
   InternalServerErrorException,
   Logger,
   NotFoundException,
@@ -7,6 +8,7 @@ import { Operator } from './models/operator.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types, UpdateQuery } from 'mongoose';
 
+@Injectable()
 export class OperatorsRepository {
   private readonly logger = new Logger(OperatorsRepository.name);
 

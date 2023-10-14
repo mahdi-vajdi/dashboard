@@ -31,7 +31,7 @@ export class OperatorsController {
 
   @Get()
   async findAll(@Req() req: Request) {
-    return this.operatorsService.findAll(req.user as User);
+    return this.operatorsService.findAllByUser(req.user as User);
   }
 
   @Get(':id')

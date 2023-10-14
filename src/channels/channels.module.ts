@@ -7,12 +7,14 @@ import {
   CHANNEL_COLLECTION_NAME,
   ChannelsSchema,
 } from './models/channel.schema';
+import { OperatorsModule } from 'src/operators/operators.module';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: CHANNEL_COLLECTION_NAME, schema: ChannelsSchema },
     ]),
+    OperatorsModule,
   ],
   controllers: [ChannelsController],
   providers: [ChannelsService, ChannelsRepository],

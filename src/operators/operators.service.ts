@@ -5,15 +5,11 @@ import { OperatorsRepository } from './operators.repository';
 import * as bcrypt from 'bcryptjs';
 import { User } from 'src/users/models/user.schema';
 import { Types } from 'mongoose';
-import { ChannelsService } from 'src/channels/channels.service';
 import { OperatorRoles } from './operator-role.enum';
 
 @Injectable()
 export class OperatorsService {
-  constructor(
-    private readonly operatorsRepository: OperatorsRepository,
-    private readonly channelsService: ChannelsService,
-  ) {}
+  constructor(private readonly operatorsRepository: OperatorsRepository) {}
 
   async create(currentUser: User, createOperatorDto: CreateOperatorDto) {
     // Check if operator exists
@@ -59,7 +55,7 @@ export class OperatorsService {
     });
   }
 
-  async findAll(currentUser: User) {
+  async findAllByUser(currentUser: User) {
     return this.operatorsRepository.findAllByUserId(currentUser._id);
   }
 

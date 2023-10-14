@@ -6,18 +6,26 @@ import * as crypto from 'crypto';
 import { channelDefaultSetting } from './channel-dafault-setting';
 import { User } from 'src/users/models/user.schema';
 import { Channel } from './models/channel.schema';
+import { OperatorsService } from 'src/operators/operators.service';
 
 @Injectable()
 export class ChannelsService {
-  constructor(private readonly channelsRepository: ChannelsRepository) {}
+  constructor(
+    private readonly channelsRepository: ChannelsRepository,
+    private readonly operatorsService: OperatorsService,
+  ) {}
 
   async create(createChannelDto: CreateChannelDto, currentUser: User) {
-    const operators = createChannelDto.addAllOperators === false ? [] : []; // FIXME: sencond condtion should get all operators for the user
-    const now = new Date();
+    const operators =
+      createChannelDto.addAllOperators === false
+        ? []
+        : (await this.operatorsService.findAllByUser(currentUser)).map(
+            (operator) => operator._id,
+          );
 
     return this.channelsRepository.create({
-      createdAt: now,
-      updatedAt: now,
+      createdAt: new Date(),
+      updatedAt: new Date(),
       owner: currentUser._id,
       title: createChannelDto.title,
       url: createChannelDto.url,
