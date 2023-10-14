@@ -16,6 +16,7 @@ import { OperatorsModule } from './operators/operators.module';
       validationSchema: Joi.object({
         PORT: Joi.number().required(),
         MONGODB_URI: Joi.string().required(),
+        JWT_SECRET: Joi.string().required(),
       }),
     }),
     MongooseModule.forRootAsync({
