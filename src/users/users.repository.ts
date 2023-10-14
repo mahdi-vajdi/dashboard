@@ -4,7 +4,7 @@ import {
   Logger,
   NotFoundException,
 } from '@nestjs/common';
-import { USER_COLLECTION_NAME, User } from './models/user.schema';
+import { User } from './models/user.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 
@@ -13,7 +13,7 @@ export class UsersRepository {
   protected readonly logger: Logger = new Logger(UsersRepository.name);
 
   constructor(
-    @InjectModel(USER_COLLECTION_NAME)
+    @InjectModel(User.name)
     private readonly userModel: Model<User>,
   ) {}
 

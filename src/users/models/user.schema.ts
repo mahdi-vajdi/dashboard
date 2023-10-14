@@ -1,9 +1,9 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { SchemaTypes, Types } from 'mongoose';
+import { HydratedDocument, SchemaTypes, Types } from 'mongoose';
 
-export const USER_COLLECTION_NAME = 'users';
+export type UserDocument = HydratedDocument<User>;
 
-@Schema({ collection: USER_COLLECTION_NAME, versionKey: false })
+@Schema({ versionKey: false })
 export class User {
   @Prop({ type: SchemaTypes.ObjectId })
   _id: Types.ObjectId;

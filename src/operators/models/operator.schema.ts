@@ -4,7 +4,7 @@ import { OperatorRoles } from '../operator-role.enum';
 
 export type OperatorDocument = HydratedDocument<Operator>;
 
-@Schema()
+@Schema({ versionKey: false })
 export class Operator {
   @Prop({ type: SchemaTypes.ObjectId })
   _id: Types.ObjectId;

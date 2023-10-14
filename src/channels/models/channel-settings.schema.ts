@@ -1,7 +1,7 @@
 import { Prop, Schema } from '@nestjs/mongoose';
 import { SchemaTypes } from 'mongoose';
 
-@Schema({ _id: false })
+@Schema({ _id: false, versionKey: false })
 export class ChannelSettings {
   @Prop()
   logo: string;
