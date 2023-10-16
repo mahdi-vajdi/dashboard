@@ -5,9 +5,11 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Channel } from './models/channel.schema';
+import { Channel, ChannelDocument } from './models/channel.schema';
 import { Model, Types, UpdateQuery } from 'mongoose';
 import { Operator } from 'src/operators/models/operator.schema';
+import { ChannelSettingsEnum } from './channel-settings/channel-settings.enum';
+import { ChannelSettings } from './models/channel-settings.schema';
 
 @Injectable()
 export class ChannelsRepository {
@@ -53,12 +55,12 @@ export class ChannelsRepository {
 
   async findOneById(id: string) {
     try {
-      const channels = await this.channelModel
+      const channel = await this.channelModel
         .findById(new Types.ObjectId(id), {}, { lean: true })
         .populate<{ operators: Operator }>('operators')
         .exec();
-      console.log(channels);
-      return channels;
+      console.log(channel);
+      return channel;
     } catch (error) {
       throw new InternalServerErrorException({
         message: 'Something went wrong',
@@ -67,18 +69,49 @@ export class ChannelsRepository {
     }
   }
 
-  async updateOneById(_id: string, updateQuery: UpdateQuery<Channel>) {
+  async updateOneById(
+    userId: Types.ObjectId,
+    _id: string,
+    updateQuery: UpdateQuery<ChannelDocument>,
+  ) {
     try {
       const updatedChannel = await this.channelModel
-        .findByIdAndUpdate({ _id }, updateQuery, {
+        .findOneAndUpdate({ _id, owner: userId }, updateQuery, {
           lean: true,
           new: true,
         })
         .exec();
       if (!updatedChannel) {
         this.logger.warn(`Channel not found with id: ${_id}`);
-        throw new NotFoundException('Cahnnel not found');
+        throw new NotFoundException('Channel not found');
       }
+      return updatedChannel;
+    } catch (error) {
+      throw new InternalServerErrorException({
+        message: 'Could not update channel',
+        error,
+      });
+    }
+  }
+
+  async updateSettings(
+    userId: Types.ObjectId,
+    channelId: string,
+    section: ChannelSettingsEnum,
+    updateDto: UpdateQuery<ChannelSettings>,
+  ) {
+    console.log(`reository dto ${JSON.stringify(updateDto)}`);
+
+    try {
+      const updatedChannel = this.channelModel.findOneAndUpdate(
+        {
+          owner: userId,
+          _id: channelId,
+        },
+        { [`settings.${section}`]: updateDto },
+        { new: true, lean: true },
+      );
+      if (!updatedChannel) throw new NotFoundException('Channel not found');
       return updatedChannel;
     } catch (error) {
       throw new InternalServerErrorException({

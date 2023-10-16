@@ -1,6 +1,9 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, SchemaTypes, Types } from 'mongoose';
-import { ChannelSettings } from './channel-settings.schema';
+import {
+  ChannelSettings,
+  ChannelSettingsSchema,
+} from './channel-settings.schema';
 
 export type ChannelDocument = HydratedDocument<Channel>;
 
@@ -33,7 +36,7 @@ export class Channel {
   @Prop({ type: [{ type: SchemaTypes.ObjectId, ref: 'Operator' }] })
   operators: Types.ObjectId[];
 
-  @Prop({ type: ChannelSettings })
+  @Prop({ type: ChannelSettingsSchema })
   settings: ChannelSettings;
 }
 

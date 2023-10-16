@@ -10,10 +10,11 @@ import {
 } from '@nestjs/common';
 import { ChannelsService } from './channels.service';
 import { CreateChannelDto } from './dto/create-channel.dto';
-import { UpdateChannelDto } from './dto/update-channel.dto';
+import { UpdateChannelMainSettingsDto } from './dto/channel-settings/update-main-settings.dto';
 import { Request } from 'express';
 import { JwtAuthGuard } from 'src/auth/guards/http-jwt.guard';
 import { User } from 'src/users/models/user.schema';
+import { UpdateChannelWidgetSettingsDto } from './dto/channel-settings/update-widget-settings.dto';
 
 @UseGuards(JwtAuthGuard)
 @Controller('channels')
@@ -22,10 +23,12 @@ export class ChannelsController {
 
   @Post()
   async create(
-    @Body() createChannelDto: CreateChannelDto,
     @Req() req: Request,
+    @Body() createChannelDto: CreateChannelDto,
   ) {
-    return this.channelsService.create(createChannelDto, req.user as User);
+    console.log(`controller dto ${JSON.stringify(createChannelDto)}`);
+
+    return this.channelsService.create(req.user as User, createChannelDto);
   }
 
   @Get()
@@ -38,11 +41,42 @@ export class ChannelsController {
     return this.channelsService.findOne(id);
   }
 
-  @Patch(':id')
-  async update(
+  @Patch(':id/operators')
+  async updateChannelOperators(
+    @Req() req: Request,
     @Param('id') id: string,
-    @Body() updateChannelDto: UpdateChannelDto,
+    @Body() updateChannelDto: any,
   ) {
-    return this.channelsService.update(id, updateChannelDto);
+    return this.channelsService.updateChannelOperators(
+      req.user as User,
+      id,
+      updateChannelDto,
+    );
+  }
+
+  @Patch(':id/settings/main')
+  async updateMainSettings(
+    @Req() req: Request,
+    @Param('id') id: string,
+    @Body() updateChannelDto: UpdateChannelMainSettingsDto,
+  ) {
+    return this.channelsService.updateMainSettings(
+      req.user as User,
+      id,
+      updateChannelDto,
+    );
+  }
+
+  @Patch(':id/settings/widget')
+  async updateWidgetSettings(
+    @Req() req: Request,
+    @Param('id') id: string,
+    @Body() updateChannelDto: UpdateChannelWidgetSettingsDto,
+  ) {
+    return this.channelsService.updateWidgetSettings(
+      req.user as User,
+      id,
+      updateChannelDto,
+    );
   }
 }

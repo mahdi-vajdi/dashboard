@@ -1,67 +1,60 @@
-import { Prop, Schema } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { SchemaTypes } from 'mongoose';
 
 @Schema({ _id: false, versionKey: false })
 export class ChannelSettings {
-  @Prop()
-  logo: string;
-
-  @Prop()
-  seeWhileTyping: boolean;
-
-  @Prop()
-  showRaychatCredit: boolean;
-
-  @Prop({ type: SchemaTypes.Mixed, required: false })
-  infoForm: {
-    isEnabled: boolean;
-    isOptional: boolean;
-    type: string;
-  };
-
-  @Prop({ type: [SchemaTypes.Mixed], required: false })
-  widgetLandings: {
-    laguage: string;
-    title: string;
-    description: string;
-    startMessage: string;
-    startReply: string;
-  }[];
-
-  @Prop({ type: SchemaTypes.Mixed, required: false })
-  widgetCustomization: {
+  @Prop({ type: SchemaTypes.Mixed, required: true })
+  main: {
     logo: string;
-    bgColor: string;
-    loBgColor: string;
-    secondaryColor: string;
-    bgTheme: string;
-  };
-
-  @Prop({ type: SchemaTypes.Mixed, required: false })
-  widgetDisplay: {
-    show: {
+    seeWhileTyping: boolean;
+    sendVoice: boolean;
+    showRaychatCredit: boolean;
+    infoForm: {
       isEnabled: boolean;
-      pages: string[];
-    };
-    doNotShow: {
-      isEnabled: boolean;
-      pages: string[];
+      isOptional: boolean;
+      type: string;
     };
   };
 
-  @Prop({ type: SchemaTypes.Mixed, required: false })
-  position: {
-    ltr: {
-      position: string;
-      bottom: number;
-      right: number;
-      showInMobile: boolean;
+  @Prop({ type: SchemaTypes.Mixed, required: true })
+  widget: {
+    landings: {
+      laguage: string;
+      title: string;
+      description: string;
+      startMessage: string;
+      startReply: string;
+    }[];
+
+    customization: {
+      logo: string;
+      bgColor: string;
+      loBgColor: string;
+      secondaryColor: string;
+      bgTheme: string;
     };
-    rtl: {
-      position: string;
-      bottom: number;
-      left: number;
-      showInMobile: boolean;
+
+    display: {
+      showInPagesEnabled: boolean;
+      showPages: string[];
+      hideInPagesEnabled: boolean;
+      hideInPages: string[];
+    };
+
+    position: {
+      ltrPosition: string;
+      ltrBottom: number;
+      ltrRight: number;
+      ltrShowInMobile: boolean;
+      rtlPosition: string;
+      rtlBottom: number;
+      rtlLeft: number;
+      rtlShowInMobile: boolean;
     };
   };
+
+  // FIXME: office hours, email settings, triggers need to be added
 }
+
+export const ChannelSettingsSchema =
+  SchemaFactory.createForClass(ChannelSettings);
