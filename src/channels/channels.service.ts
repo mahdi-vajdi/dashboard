@@ -66,7 +66,6 @@ export class ChannelsService {
     id: string,
     dto: UpdateChannelMainSettingsDto,
   ) {
-    console.log(`service dto ${JSON.stringify(dto)}`);
     return this.channelsRepository.updateSettings(
       currentUser._id,
       id,
@@ -80,7 +79,6 @@ export class ChannelsService {
     id: string,
     dto: UpdateChannelWidgetSettingsDto,
   ) {
-    console.log(`service dto ${JSON.stringify(dto)}`);
     return this.channelsRepository.updateSettings(
       currentUser._id,
       id,

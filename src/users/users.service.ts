@@ -22,7 +22,6 @@ export class UsersService {
       createUserDto.email,
       createUserDto.phone,
     );
-    console.log('user exists: ' + exists);
     if (exists) throw new ConflictException('Email or phone is duplicate');
 
     const user = await this.usersRepository.create({

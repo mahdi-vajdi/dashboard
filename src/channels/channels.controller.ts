@@ -26,8 +26,6 @@ export class ChannelsController {
     @Req() req: Request,
     @Body() createChannelDto: CreateChannelDto,
   ) {
-    console.log(`controller dto ${JSON.stringify(createChannelDto)}`);
-
     return this.channelsService.create(req.user as User, createChannelDto);
   }
 

@@ -41,10 +41,15 @@ export class ChannelsRepository {
 
   async findAllByUserId(userId: Types.ObjectId) {
     try {
-      return await this.channelModel
+      const channels = await this.channelModel
         .find({ owner: userId }, {}, { lean: true })
         .populate<{ operators: Operator }>('operators')
         .exec();
+      if (!channels) {
+        this.logger.warn(`No channels were found for user: ${userId}`);
+        throw new NotFoundException('Channel not found');
+      }
+      return channels;
     } catch (error) {
       throw new InternalServerErrorException({
         message: 'Something went wrong',
@@ -59,7 +64,10 @@ export class ChannelsRepository {
         .findById(new Types.ObjectId(id), {}, { lean: true })
         .populate<{ operators: Operator }>('operators')
         .exec();
-      console.log(channel);
+      if (!channel) {
+        this.logger.warn(`Channel not found with id: ${id}`);
+        throw new NotFoundException('Channel not found');
+      }
       return channel;
     } catch (error) {
       throw new InternalServerErrorException({
@@ -100,8 +108,6 @@ export class ChannelsRepository {
     section: ChannelSettingsEnum,
     updateDto: UpdateQuery<ChannelSettings>,
   ) {
-    console.log(`reository dto ${JSON.stringify(updateDto)}`);
-
     try {
       const updatedChannel = this.channelModel.findOneAndUpdate(
         {
