@@ -8,6 +8,7 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { ChannelsModule } from './channels/channels.module';
 import { OperatorsModule } from './operators/operators.module';
+import { TeamsModule } from './teams/teams.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { OperatorsModule } from './operators/operators.module';
     AuthModule,
     ChannelsModule,
     OperatorsModule,
+    TeamsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
