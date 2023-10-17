@@ -9,9 +9,10 @@ import { UpdateTeamDto } from './dto/update-team.dto';
 export class TeamsService {
   constructor(private readonly teamsRepository: TeamsRepository) {}
 
-  async create(dto: CreateTeamDto) {
+  async create(dto: CreateTeamDto, isDefaultTeam = false) {
     return await this.teamsRepository.create({
       channel: new Types.ObjectId(dto.channelId),
+      isDefault: isDefaultTeam,
       title: dto.title,
       logo: dto.logo,
       createdAt: new Date(),

@@ -16,7 +16,7 @@ export class TeamsRepository {
     @InjectModel(Team.name) private readonly teamModel: Model<Team>,
   ) {}
 
-  async create(document: Omit<Team, '_id' | 'isDefault'>) {
+  async create(document: Omit<Team, '_id'>) {
     try {
       const createdTeam = new this.teamModel({
         ...document,
