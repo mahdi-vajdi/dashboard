@@ -39,12 +39,15 @@ export class ChannelsService {
     });
 
     // Create a default team for the channel
-    await this.teamsService.create({
-      channelId: channel._id.toHexString(),
-      title: channel.title,
-      logo: 'default',
-      operators: operators.map((operator) => operator.toHexString()),
-    });
+    await this.teamsService.create(
+      {
+        channelId: channel._id.toHexString(),
+        title: channel.title,
+        logo: 'default',
+        operators: operators.map((operator) => operator.toHexString()),
+      },
+      true,
+    );
 
     return channel;
   }
