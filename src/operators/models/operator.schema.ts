@@ -1,6 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types, SchemaTypes, HydratedDocument } from 'mongoose';
 import { OperatorRoles } from '../operator-role.enum';
+import { User } from 'src/users/models/user.schema';
+import { Channel } from 'diagnostics_channel';
 
 export type OperatorDocument = HydratedDocument<Operator>;
 
@@ -36,11 +38,11 @@ export class Operator {
   @Prop()
   online: boolean;
 
-  @Prop({ type: [{ type: SchemaTypes.ObjectId }] })
-  channels: Types.ObjectId[]; // Reference to the websites collection
+  @Prop({ type: [{ type: SchemaTypes.ObjectId, ref: Channel.name }] })
+  channels: Types.ObjectId[];
 
-  @Prop()
-  admin: Types.ObjectId; // Reference to the users collection
+  @Prop({ type: SchemaTypes.ObjectId, ref: User.name })
+  admin: Types.ObjectId;
 
   @Prop({
     type: String,
