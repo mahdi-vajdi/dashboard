@@ -8,12 +8,14 @@ import { User } from 'src/users/models/user.schema';
 import { OperatorsService } from 'src/operators/operators.service';
 import { ChannelSettingsEnum } from './channel-settings/channel-settings.enum';
 import { UpdateChannelWidgetSettingsDto } from './dto/channel-settings/update-widget-settings.dto';
+import { TeamsService } from 'src/teams/teams.service';
 
 @Injectable()
 export class ChannelsService {
   constructor(
     private readonly channelsRepository: ChannelsRepository,
     private readonly operatorsService: OperatorsService,
+    private readonly teamsService: TeamsService,
   ) {}
 
   async create(currentUser: User, createChannelDto: CreateChannelDto) {
@@ -24,7 +26,7 @@ export class ChannelsService {
             (operator) => operator._id,
           );
 
-    return this.channelsRepository.create({
+    const channel = await this.channelsRepository.create({
       createdAt: new Date(),
       updatedAt: new Date(),
       owner: currentUser._id,
@@ -35,6 +37,16 @@ export class ChannelsService {
       operators: operators,
       settings: channelDefaultSetting,
     });
+
+    // Create a default team for the channel
+    await this.teamsService.create({
+      channelId: channel._id.toHexString(),
+      title: channel.title,
+      logo: 'default',
+      operators: operators.map((operator) => operator.toHexString()),
+    });
+
+    return channel;
   }
 
   async findAll(currentUser: User) {
