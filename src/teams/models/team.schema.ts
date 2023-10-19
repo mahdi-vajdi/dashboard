@@ -9,25 +9,28 @@ export class Team {
   @Prop({ type: SchemaTypes.ObjectId })
   _id: Types.ObjectId;
 
-  @Prop({ type: SchemaTypes.ObjectId })
-  channel: Types.ObjectId;
-
-  @Prop()
-  isDefault: boolean;
-
-  @Prop()
-  title: string;
-
-  @Prop()
-  logo: string;
-
-  @Prop()
+  @Prop({ type: Date, required: true })
   createdAt: Date;
 
-  @Prop()
+  @Prop({ type: Date, required: true })
   updateAt: Date;
 
-  @Prop({ type: [{ type: SchemaTypes.ObjectId, ref: Operator.name }] })
+  @Prop({ type: SchemaTypes.ObjectId, required: true })
+  channel: Types.ObjectId;
+
+  @Prop({ required: true })
+  isDefault: boolean;
+
+  @Prop({ required: true })
+  title: string;
+
+  @Prop({ required: true })
+  logo: string;
+
+  @Prop({
+    type: [{ type: SchemaTypes.ObjectId, ref: Operator.name }],
+    required: true,
+  })
   operators: Types.ObjectId[];
 }
 

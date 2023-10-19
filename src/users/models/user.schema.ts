@@ -8,22 +8,25 @@ export class User {
   @Prop({ type: SchemaTypes.ObjectId })
   _id: Types.ObjectId;
 
-  @Prop()
+  @Prop({ type: Date, required: true })
   createdAt: Date;
 
-  @Prop()
+  @Prop({ type: Date, required: true })
+  updatedAt: Date;
+
+  @Prop({ required: true })
   firstName: string;
 
-  @Prop()
+  @Prop({ required: true })
   lastName: string;
 
-  @Prop()
+  @Prop({ required: true })
   email: string;
 
-  @Prop()
+  @Prop({ required: true })
   phone: string;
 
-  @Prop()
+  @Prop({ required: true })
   password: string;
 }
 

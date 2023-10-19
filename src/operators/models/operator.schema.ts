@@ -11,37 +11,40 @@ export class Operator {
   @Prop({ type: SchemaTypes.ObjectId })
   _id: Types.ObjectId;
 
-  @Prop()
+  @Prop({ type: Date, required: true })
   createdAt: Date;
 
-  @Prop()
+  @Prop({ type: Date, required: true })
   updatedAt: Date;
 
-  @Prop()
+  @Prop({ required: true })
   email: string;
 
-  @Prop()
+  @Prop({ required: true })
   phone: string;
 
-  @Prop()
+  @Prop({ required: true })
   title: string;
 
-  @Prop()
+  @Prop({ required: true })
   name: string;
 
-  @Prop()
+  @Prop({ required: true })
   password: string;
 
-  @Prop()
+  @Prop({ required: true })
   avatar: string;
 
-  @Prop()
+  @Prop({ required: true })
   online: boolean;
 
-  @Prop({ type: [{ type: SchemaTypes.ObjectId, ref: Channel.name }] })
+  @Prop({
+    type: [{ type: SchemaTypes.ObjectId, ref: Channel.name }],
+    required: true,
+  })
   channels: Types.ObjectId[];
 
-  @Prop({ type: SchemaTypes.ObjectId, ref: User.name })
+  @Prop({ type: SchemaTypes.ObjectId, ref: User.name, required: true })
   admin: Types.ObjectId;
 
   @Prop({

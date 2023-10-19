@@ -27,6 +27,7 @@ export class UsersService {
     const user = await this.usersRepository.create({
       ...createUserDto,
       createdAt: new Date(),
+      updatedAt: new Date(),
       password: await bcrypt.hash(createUserDto.password, 10),
     });
 

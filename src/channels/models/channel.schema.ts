@@ -12,31 +12,34 @@ export class Channel {
   @Prop({ type: SchemaTypes.ObjectId })
   _id: Types.ObjectId;
 
-  @Prop()
+  @Prop({ type: Date, required: true })
   createdAt: Date;
 
-  @Prop()
+  @Prop({ type: Date, required: true })
   updatedAt: Date;
 
-  @Prop()
+  @Prop({ type: SchemaTypes.ObjectId, required: true })
   owner: Types.ObjectId;
 
-  @Prop()
+  @Prop({ required: true })
   title: string;
 
-  @Prop()
+  @Prop({ required: true })
   url: string;
 
-  @Prop()
+  @Prop({ required: true })
   token: string;
 
-  @Prop()
+  @Prop({ required: true })
   isEnabled: boolean;
 
-  @Prop({ type: [{ type: SchemaTypes.ObjectId, ref: 'Operator' }] })
+  @Prop({
+    type: [{ type: SchemaTypes.ObjectId, ref: 'Operator' }],
+    required: true,
+  })
   operators: Types.ObjectId[];
 
-  @Prop({ type: ChannelSettingsSchema })
+  @Prop({ type: ChannelSettingsSchema, required: true })
   settings: ChannelSettings;
 }
 
