@@ -12,8 +12,9 @@ import {
 import { FaqService } from './faq.service';
 import { CreateFaqDto } from './dto/create-faq.dto';
 import { UpdateFaqDto } from './dto/update-faq.dto';
+import { JwtAuthGuard } from 'src/auth/guards/http-jwt.guard';
 
-@UseGuards()
+@UseGuards(JwtAuthGuard)
 @Controller('faq')
 export class FaqController {
   constructor(private readonly faqService: FaqService) {}
