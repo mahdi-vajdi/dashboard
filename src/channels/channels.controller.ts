@@ -15,6 +15,7 @@ import { Request } from 'express';
 import { JwtAuthGuard } from 'src/auth/guards/http-jwt.guard';
 import { User } from 'src/users/models/user.schema';
 import { UpdateChannelWidgetSettingsDto } from './dto/channel-settings/update-widget-settings.dto';
+import { ParseMongoIdPipe } from 'src/common/parse-objectId.pipe';
 
 @UseGuards(JwtAuthGuard)
 @Controller('channels')
@@ -35,14 +36,14 @@ export class ChannelsController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
+  async findOne(@Param('id', ParseMongoIdPipe) id: string) {
     return this.channelsService.findOne(id);
   }
 
   @Patch(':id/operators')
   async updateChannelOperators(
     @Req() req: Request,
-    @Param('id') id: string,
+    @Param('id', ParseMongoIdPipe) id: string,
     @Body() updateChannelDto: any,
   ) {
     return this.channelsService.updateChannelOperators(
@@ -55,7 +56,7 @@ export class ChannelsController {
   @Patch(':id/settings/main')
   async updateMainSettings(
     @Req() req: Request,
-    @Param('id') id: string,
+    @Param('id', ParseMongoIdPipe) id: string,
     @Body() updateChannelDto: UpdateChannelMainSettingsDto,
   ) {
     return this.channelsService.updateMainSettings(
@@ -68,7 +69,7 @@ export class ChannelsController {
   @Patch(':id/settings/widget')
   async updateWidgetSettings(
     @Req() req: Request,
-    @Param('id') id: string,
+    @Param('id', ParseMongoIdPipe) id: string,
     @Body() updateChannelDto: UpdateChannelWidgetSettingsDto,
   ) {
     return this.channelsService.updateWidgetSettings(

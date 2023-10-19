@@ -15,6 +15,7 @@ import { UpdateOperatorDto } from './dto/update-operator.dto';
 import { Request } from 'express';
 import { User } from 'src/users/models/user.schema';
 import { JwtAuthGuard } from 'src/auth/guards/http-jwt.guard';
+import { ParseMongoIdPipe } from 'src/common/parse-objectId.pipe';
 
 @UseGuards(JwtAuthGuard)
 @Controller('operators')
@@ -35,14 +36,17 @@ export class OperatorsController {
   }
 
   @Get(':id')
-  async findOne(@Req() req: Request, @Param('id') id: string) {
+  async findOne(
+    @Req() req: Request,
+    @Param('id', ParseMongoIdPipe) id: string,
+  ) {
     return this.operatorsService.findOne(req.user as User, id);
   }
 
   @Patch(':id')
   async update(
     @Req() req: Request,
-    @Param('id') id: string,
+    @Param('id', ParseMongoIdPipe) id: string,
     @Body() updateOperatorDto: UpdateOperatorDto,
   ) {
     return this.operatorsService.update(
@@ -53,7 +57,7 @@ export class OperatorsController {
   }
 
   @Delete(':id')
-  async remove(@Req() req: Request, @Param('id') id: string) {
+  async remove(@Req() req: Request, @Param('id', ParseMongoIdPipe) id: string) {
     return this.operatorsService.remove(req.user as User, id);
   }
 }

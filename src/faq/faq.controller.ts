@@ -13,6 +13,7 @@ import { FaqService } from './faq.service';
 import { CreateFaqDto } from './dto/create-faq.dto';
 import { UpdateFaqDto } from './dto/update-faq.dto';
 import { JwtAuthGuard } from 'src/auth/guards/http-jwt.guard';
+import { ParseMongoIdPipe } from 'src/common/parse-objectId.pipe';
 
 @UseGuards(JwtAuthGuard)
 @Controller('faq')
@@ -25,26 +26,32 @@ export class FaqController {
   }
 
   @Get()
-  findAll(@Query('channel') channelId: string) {
+  findAll(@Query('channel', ParseMongoIdPipe) channelId: string) {
     return this.faqService.findAll(channelId);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string, @Query('channel') channelId: string) {
+  findOne(
+    @Param('id', ParseMongoIdPipe) id: string,
+    @Query('channel', ParseMongoIdPipe) channelId: string,
+  ) {
     return this.faqService.findOne(id, channelId);
   }
 
   @Patch(':id')
   update(
-    @Param('id') id: string,
-    @Query('channel') channelId: string,
+    @Param('id', ParseMongoIdPipe) id: string,
+    @Query('channel', ParseMongoIdPipe) channelId: string,
     @Body() updateFaqDto: UpdateFaqDto,
   ) {
     return this.faqService.update(id, channelId, updateFaqDto);
   }
 
   @Delete(':id')
-  delete(@Param('id') id: string, @Query('channel') channelId: string) {
+  delete(
+    @Param('id', ParseMongoIdPipe) id: string,
+    @Query('channel', ParseMongoIdPipe) channelId: string,
+  ) {
     return this.faqService.delete(id, channelId);
   }
 }
