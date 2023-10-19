@@ -26,7 +26,7 @@ export class TeamsService {
   }
 
   update(channelId: string, teamId: string, dto: UpdateTeamDto) {
-    return this.teamsRepository.update(channelId, teamId, dto);
+    return this.teamsRepository.updateOne(channelId, teamId, dto);
   }
 
   async remove({ channelId, teamId }: DeleteTeamDto) {

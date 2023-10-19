@@ -1,9 +1,4 @@
-import {
-  Injectable,
-  InternalServerErrorException,
-  Logger,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Team } from './models/team.schema';
 import { Model, Types, UpdateQuery } from 'mongoose';
@@ -16,93 +11,69 @@ export class TeamsRepository {
     @InjectModel(Team.name) private readonly teamModel: Model<Team>,
   ) {}
 
-  async create(document: Omit<Team, '_id'>) {
-    try {
-      const createdTeam = new this.teamModel({
-        ...document,
-        _id: new Types.ObjectId(),
-      });
-      const savedTeam = await createdTeam.save();
-      this.logger.log(
-        `New Channel with id: ${savedTeam._id} for channel: ${savedTeam.channel} has been created.`,
-      );
-      return savedTeam;
-    } catch (error) {
-      throw new InternalServerErrorException({
-        message: 'Something went Wrong.',
-        error,
-      });
-    }
+  async create(dto: Omit<Team, '_id'>) {
+    const createdTeam = new this.teamModel({
+      ...dto,
+      _id: new Types.ObjectId(),
+    });
+    const savedTeam = await createdTeam.save();
+    this.logger.log(
+      `New team with id: ${savedTeam._id} for channel: ${savedTeam.channel} has been created.`,
+    );
+
+    return savedTeam;
   }
 
   async findAll(channelId: string) {
-    try {
-      const teams = this.teamModel.find(
-        { channel: channelId },
-        {},
-        { lean: true },
-      );
+    const teams = this.teamModel
+      .find({ channel: channelId }, {}, { lean: true })
+      .exec();
 
-      // In case there are not teams found; wich is a bug!!
-      if (!teams) {
-        this.logger.error(
-          `No teams found for channel ${channelId}. There should be at least 1 team(default team).`,
-        );
-        throw new NotFoundException(
-          'Could not find any teams. Please create one!',
-        );
-      }
-      return teams;
-    } catch (error) {
-      throw new InternalServerErrorException({
-        message: 'Something went Wrong.',
-        error,
-      });
+    // In case there are not teams found; wich is a bug!!
+    if (!teams) {
+      this.logger.error(
+        `No teams found for channel ${channelId}. There should be at least 1 team(default team).`,
+      );
+      throw new NotFoundException(
+        'Could not find any teams. Please create one!',
+      );
     }
+
+    return teams;
   }
 
-  async update(channelId: string, teamId: string, dto: UpdateQuery<Team>) {
-    try {
-      const updatedTeam = await this.teamModel.findOneAndUpdate(
-        { channel: channelId, _id: teamId },
-        dto,
-        {
-          new: true,
-          lean: true,
-        },
+  async updateOne(channelId: string, teamId: string, dto: UpdateQuery<Team>) {
+    const updatedTeam = await this.teamModel
+      .findOneAndUpdate({ channel: channelId, _id: teamId }, dto, {
+        new: true,
+        lean: true,
+      })
+      .exec();
+
+    if (!updatedTeam)
+      throw new NotFoundException(
+        `Could not find any teams with criteria channelId: ${channelId} and teamId: ${teamId}`,
       );
 
-      if (!updatedTeam)
-        throw new NotFoundException(
-          `Could not find any teams with criteria channelId: ${channelId} and teamId: ${teamId}`,
-        );
-
-      return updatedTeam;
-    } catch (error) {
-      throw new InternalServerErrorException({
-        message: 'Something went Wrong.',
-        error,
-      });
-    }
+    return updatedTeam;
   }
 
-  async deleteOneById(channelId, teamId: string) {
-    try {
-      const deletedTeam = await this.teamModel.deleteOne({
+  async deleteOneById(channelId: string, teamId: string) {
+    const deletedTeam = await this.teamModel
+      .deleteOne({
         channel: channelId,
         _id: teamId,
-      });
-      if (!deletedTeam)
-        throw new NotFoundException(
-          `Could not find any teams with criteria channelId: ${channelId} and teamId: ${teamId}`,
-        );
+      })
+      .exec();
 
-      return { message: 'Deleted team successfully' };
-    } catch (error) {
-      throw new InternalServerErrorException({
-        message: 'Something went Wrong.',
-        error,
-      });
-    }
+    if (!deletedTeam)
+      throw new NotFoundException(
+        `Could not find any teams with criteria channelId: ${channelId} and teamId: ${teamId}`,
+      );
+
+    this.logger.log(
+      `the team with id: ${teamId} for channel: ${channelId} has been deleted.`,
+    );
+    return { message: 'Deleted team successfully' };
   }
 }
