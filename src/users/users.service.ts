@@ -1,13 +1,9 @@
-import {
-  ConflictException,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersRepository } from './users.repository';
 import * as bcrypt from 'bcryptjs';
-import { User } from './models/user.schema';
 import { OperatorsService } from 'src/operators/operators.service';
+import { User } from './models/user.schema';
 
 @Injectable()
 export class UsersService {
@@ -22,7 +18,7 @@ export class UsersService {
       createUserDto.email,
       createUserDto.phone,
     );
-    if (exists) throw new ConflictException('Email or phone is duplicate');
+    if (exists) throw new ConflictException('User already exists');
 
     const user = await this.usersRepository.create({
       ...createUserDto,
@@ -37,15 +33,17 @@ export class UsersService {
     return user;
   }
 
-  async findOneByEmail(email: string): Promise<User> {
-    return this.usersRepository.findOneByEmail(email);
+  async findOneByEmail(email: string) {
+    return this.usersRepository.findOne({ email });
   }
 
-  async verifyUser(email: string, password: string): Promise<User> {
-    const user = await this.usersRepository.findOneByEmail(email);
-    const passwordValid = await bcrypt.compare(password, user.password);
-    if (!passwordValid)
-      throw new UnauthorizedException('Credintials are not valid');
-    return user;
+  async findOneById(userId: string) {
+    return this.usersRepository.findOne({ _id: userId });
+  }
+
+  async updateRefreshToken(userId: string, token: string) {
+    return this.usersRepository.update(userId, {
+      refreshToken: await bcrypt.hash(token, 10),
+    });
   }
 }

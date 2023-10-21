@@ -1,7 +1,7 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { User } from './models/user.schema';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
+import { FilterQuery, Model, Types, UpdateQuery } from 'mongoose';
 
 @Injectable()
 export class UsersRepository {
@@ -22,17 +22,28 @@ export class UsersRepository {
     return savedUser;
   }
 
-  async findOneByEmail(email: string): Promise<User> {
+  async findOne(filterQuery: FilterQuery<User>): Promise<User> {
     const user = await this.userModel
-      .findOne({ email }, {}, { lean: true })
+      .findOne(filterQuery, {}, { lean: true })
       .exec();
 
-    if (!user) {
-      this.logger.warn(`Could not find a user with email: ${email}`);
-      throw new NotFoundException('User not found');
-    }
+    if (!user)
+      this.logger.warn(`Could not find a user with cirteria: ${filterQuery}`);
 
     return user;
+  }
+
+  async update(userId: string, updateQuery: UpdateQuery<User>) {
+    const updatedUser = this.userModel
+      .findByIdAndUpdate(userId, updateQuery, {
+        new: true,
+        lean: true,
+      })
+      .exec();
+
+    if (!updatedUser) throw new NotFoundException('Channel not found');
+
+    return updatedUser;
   }
 
   async userExists(email: string, phone: string) {

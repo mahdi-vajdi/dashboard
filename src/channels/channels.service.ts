@@ -4,11 +4,12 @@ import { UpdateChannelMainSettingsDto } from './dto/channel-settings/update-main
 import { ChannelsRepository } from './channels.respository';
 import * as crypto from 'crypto';
 import { channelDefaultSetting } from './channel-settings/channel-dafault-setting';
-import { User } from 'src/users/models/user.schema';
 import { OperatorsService } from 'src/operators/operators.service';
 import { ChannelSettingsEnum } from './channel-settings/channel-settings.enum';
 import { UpdateChannelWidgetSettingsDto } from './dto/channel-settings/update-widget-settings.dto';
 import { TeamsService } from 'src/teams/teams.service';
+import { JwtPayload } from 'src/auth/auth.service';
+import { Types } from 'mongoose';
 
 @Injectable()
 export class ChannelsService {
@@ -18,7 +19,7 @@ export class ChannelsService {
     private readonly teamsService: TeamsService,
   ) {}
 
-  async create(currentUser: User, createChannelDto: CreateChannelDto) {
+  async create(currentUser: JwtPayload, createChannelDto: CreateChannelDto) {
     const operators =
       createChannelDto.addAllOperators === false
         ? []
@@ -29,7 +30,7 @@ export class ChannelsService {
     const channel = await this.channelsRepository.create({
       createdAt: new Date(),
       updatedAt: new Date(),
-      owner: currentUser._id,
+      owner: new Types.ObjectId(currentUser.sub),
       title: createChannelDto.title,
       url: createChannelDto.url,
       token: crypto.randomUUID(),
@@ -52,8 +53,8 @@ export class ChannelsService {
     return channel;
   }
 
-  async findAll(currentUser: User) {
-    return this.channelsRepository.findAllByUserId(currentUser._id);
+  async findAll(currentUser: JwtPayload) {
+    return this.channelsRepository.findAllByUserId(currentUser.sub);
   }
 
   async findOne(id: string) {
@@ -61,12 +62,12 @@ export class ChannelsService {
   }
 
   async updateChannelOperators(
-    currentUser: User,
+    currentUser: JwtPayload,
     channelId: string,
     updateDto: any,
   ) {
     const channel = await this.channelsRepository.updateOneById(
-      currentUser._id,
+      currentUser.sub,
       channelId,
       updateDto,
     );
@@ -77,12 +78,12 @@ export class ChannelsService {
   }
 
   async updateMainSettings(
-    currentUser: User,
+    currentUser: JwtPayload,
     id: string,
     dto: UpdateChannelMainSettingsDto,
   ) {
     return this.channelsRepository.updateSettings(
-      currentUser._id,
+      currentUser.sub,
       id,
       ChannelSettingsEnum.Main,
       dto,
@@ -90,12 +91,12 @@ export class ChannelsService {
   }
 
   async updateWidgetSettings(
-    currentUser: User,
+    currentUser: JwtPayload,
     id: string,
     dto: UpdateChannelWidgetSettingsDto,
   ) {
     return this.channelsRepository.updateSettings(
-      currentUser._id,
+      currentUser.sub,
       id,
       ChannelSettingsEnum.Widget,
       dto,

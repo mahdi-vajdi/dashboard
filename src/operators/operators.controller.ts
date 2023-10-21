@@ -13,11 +13,11 @@ import { OperatorsService } from './operators.service';
 import { CreateOperatorDto } from './dto/create-operator.dto';
 import { UpdateOperatorDto } from './dto/update-operator.dto';
 import { Request } from 'express';
-import { User } from 'src/users/models/user.schema';
-import { JwtAuthGuard } from 'src/auth/guards/http-jwt.guard';
+import { AccessTokenGuard } from 'src/auth/guards/access-token.guard';
 import { ParseMongoIdPipe } from 'src/common/parse-objectId.pipe';
+import { JwtPayload } from 'src/auth/auth.service';
 
-@UseGuards(JwtAuthGuard)
+@UseGuards(AccessTokenGuard)
 @Controller('operators')
 export class OperatorsController {
   constructor(private readonly operatorsService: OperatorsService) {}
@@ -27,12 +27,15 @@ export class OperatorsController {
     @Req() req: Request,
     @Body() createOperatorDto: CreateOperatorDto,
   ) {
-    return this.operatorsService.create(req.user as User, createOperatorDto);
+    return this.operatorsService.create(
+      req.user as JwtPayload,
+      createOperatorDto,
+    );
   }
 
   @Get()
   async findAll(@Req() req: Request) {
-    return this.operatorsService.findAllByUser(req.user as User);
+    return this.operatorsService.findAllByUser(req.user as JwtPayload);
   }
 
   @Get(':id')
@@ -40,7 +43,7 @@ export class OperatorsController {
     @Req() req: Request,
     @Param('id', ParseMongoIdPipe) id: string,
   ) {
-    return this.operatorsService.findOne(req.user as User, id);
+    return this.operatorsService.findOne(req.user as JwtPayload, id);
   }
 
   @Patch(':id')
@@ -50,7 +53,7 @@ export class OperatorsController {
     @Body() updateOperatorDto: UpdateOperatorDto,
   ) {
     return this.operatorsService.update(
-      req.user as User,
+      req.user as JwtPayload,
       id,
       updateOperatorDto,
     );
@@ -58,6 +61,6 @@ export class OperatorsController {
 
   @Delete(':id')
   async remove(@Req() req: Request, @Param('id', ParseMongoIdPipe) id: string) {
-    return this.operatorsService.remove(req.user as User, id);
+    return this.operatorsService.remove(req.user as JwtPayload, id);
   }
 }

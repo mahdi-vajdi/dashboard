@@ -11,12 +11,12 @@ import {
 } from '@nestjs/common';
 import { TeamsService } from './teams.service';
 import { CreateTeamDto } from './dto/create-team.dto';
-import { JwtAuthGuard } from 'src/auth/guards/http-jwt.guard';
+import { AccessTokenGuard } from 'src/auth/guards/access-token.guard';
 import { DeleteTeamDto } from './dto/delete-team.dto';
 import { UpdateTeamDto } from './dto/update-team.dto';
 import { ParseMongoIdPipe } from 'src/common/parse-objectId.pipe';
 
-@UseGuards(JwtAuthGuard)
+@UseGuards(AccessTokenGuard)
 @Controller('teams')
 export class TeamsController {
   constructor(private readonly teamsService: TeamsService) {}

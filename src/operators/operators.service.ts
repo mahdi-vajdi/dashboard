@@ -6,12 +6,13 @@ import * as bcrypt from 'bcryptjs';
 import { User } from 'src/users/models/user.schema';
 import { Types } from 'mongoose';
 import { OperatorRoles } from './operator-role.enum';
+import { JwtPayload } from 'src/auth/auth.service';
 
 @Injectable()
 export class OperatorsService {
   constructor(private readonly operatorsRepository: OperatorsRepository) {}
 
-  async create(currentUser: User, createOperatorDto: CreateOperatorDto) {
+  async create(currentUser: JwtPayload, createOperatorDto: CreateOperatorDto) {
     // Check if operator exists
     const exists = await this.operatorsRepository.operatorsExists(
       createOperatorDto.email,
@@ -32,7 +33,7 @@ export class OperatorsService {
       channels: createOperatorDto.channelIds?.map(
         (channelId) => new Types.ObjectId(channelId),
       ),
-      admin: currentUser._id,
+      admin: new Types.ObjectId(currentUser.sub),
       role: createOperatorDto.role,
     });
   }
@@ -54,27 +55,27 @@ export class OperatorsService {
     });
   }
 
-  async findAllByUser(currentUser: User) {
-    return this.operatorsRepository.findAllByUserId(currentUser._id);
+  async findAllByUser(currentUser: JwtPayload) {
+    return this.operatorsRepository.findAllByUserId(currentUser.sub);
   }
 
-  async findOne(user: User, id: string) {
-    return this.operatorsRepository.findOneById(user._id, id);
+  async findOne(currentUser: JwtPayload, id: string) {
+    return this.operatorsRepository.findOneById(currentUser.sub, id);
   }
 
   async update(
-    currentUser: User,
+    currentUser: JwtPayload,
     id: string,
     updateOperatorDto: UpdateOperatorDto,
   ) {
     return this.operatorsRepository.updateOne(
-      currentUser._id,
+      currentUser.sub,
       id,
       updateOperatorDto,
     );
   }
 
-  async remove(currentUser: User, _id: string) {
-    return this.operatorsRepository.findOneAndDelete(currentUser._id, _id);
+  async remove(currentUser: JwtPayload, _id: string) {
+    return this.operatorsRepository.findOneAndDelete(currentUser.sub, _id);
   }
 }

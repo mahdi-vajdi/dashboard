@@ -12,12 +12,12 @@ import { ChannelsService } from './channels.service';
 import { CreateChannelDto } from './dto/create-channel.dto';
 import { UpdateChannelMainSettingsDto } from './dto/channel-settings/update-main-settings.dto';
 import { Request } from 'express';
-import { JwtAuthGuard } from 'src/auth/guards/http-jwt.guard';
-import { User } from 'src/users/models/user.schema';
+import { AccessTokenGuard } from 'src/auth/guards/access-token.guard';
 import { UpdateChannelWidgetSettingsDto } from './dto/channel-settings/update-widget-settings.dto';
 import { ParseMongoIdPipe } from 'src/common/parse-objectId.pipe';
+import { JwtPayload } from 'src/auth/auth.service';
 
-@UseGuards(JwtAuthGuard)
+@UseGuards(AccessTokenGuard)
 @Controller('channels')
 export class ChannelsController {
   constructor(private readonly channelsService: ChannelsService) {}
@@ -27,12 +27,15 @@ export class ChannelsController {
     @Req() req: Request,
     @Body() createChannelDto: CreateChannelDto,
   ) {
-    return this.channelsService.create(req.user as User, createChannelDto);
+    return this.channelsService.create(
+      req.user as JwtPayload,
+      createChannelDto,
+    );
   }
 
   @Get()
   async findAll(@Req() req: Request) {
-    return this.channelsService.findAll(req.user as User);
+    return this.channelsService.findAll(req.user as JwtPayload);
   }
 
   @Get(':id')
@@ -47,7 +50,7 @@ export class ChannelsController {
     @Body() updateChannelDto: any,
   ) {
     return this.channelsService.updateChannelOperators(
-      req.user as User,
+      req.user as JwtPayload,
       id,
       updateChannelDto,
     );
@@ -60,7 +63,7 @@ export class ChannelsController {
     @Body() updateChannelDto: UpdateChannelMainSettingsDto,
   ) {
     return this.channelsService.updateMainSettings(
-      req.user as User,
+      req.user as JwtPayload,
       id,
       updateChannelDto,
     );
@@ -73,7 +76,7 @@ export class ChannelsController {
     @Body() updateChannelDto: UpdateChannelWidgetSettingsDto,
   ) {
     return this.channelsService.updateWidgetSettings(
-      req.user as User,
+      req.user as JwtPayload,
       id,
       updateChannelDto,
     );

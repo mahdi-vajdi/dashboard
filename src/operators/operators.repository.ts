@@ -23,13 +23,13 @@ export class OperatorsRepository {
     return savedOperator;
   }
 
-  async findAllByUserId(userId: Types.ObjectId) {
+  async findAllByUserId(userId: string) {
     return await this.operatorModel
       .find({ admin: userId }, {}, { lean: true })
       .exec();
   }
 
-  async findOneById(userId: Types.ObjectId, _id: string) {
+  async findOneById(userId: string, _id: string) {
     const operator = await this.operatorModel
       .findOne({ admin: new Types.ObjectId(userId), _id }, {}, { lean: true })
       .exec();
@@ -40,7 +40,7 @@ export class OperatorsRepository {
   }
 
   async updateOne(
-    userId: Types.ObjectId,
+    userId: string,
     _id: string,
     updateQuery: UpdateQuery<Operator>,
   ) {
@@ -57,7 +57,7 @@ export class OperatorsRepository {
     return updatedOperator;
   }
 
-  async findOneAndDelete(userId: Types.ObjectId, _id: string) {
+  async findOneAndDelete(userId: string, _id: string) {
     const deletedOperator = await this.operatorModel
       .deleteOne({ admin: userId, _id }, { lean: true })
       .exec();

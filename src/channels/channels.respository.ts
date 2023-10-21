@@ -29,7 +29,7 @@ export class ChannelsRepository {
     return savedChannel;
   }
 
-  async findAllByUserId(userId: Types.ObjectId) {
+  async findAllByUserId(userId: string) {
     return await this.channelModel
       .find({ owner: userId }, {}, { lean: true })
       .populate<{ operators: Operator }>('operators')
@@ -48,7 +48,7 @@ export class ChannelsRepository {
   }
 
   async updateOneById(
-    userId: Types.ObjectId,
+    userId: string,
     _id: string,
     updateQuery: UpdateQuery<ChannelDocument>,
   ) {
@@ -65,7 +65,7 @@ export class ChannelsRepository {
   }
 
   async updateSettings(
-    userId: Types.ObjectId,
+    userId: string,
     channelId: string,
     section: ChannelSettingsEnum,
     updateDto: UpdateQuery<ChannelSettings>,
