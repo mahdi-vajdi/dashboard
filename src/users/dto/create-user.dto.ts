@@ -21,6 +21,6 @@ export class CreateUserDto {
   @IsMobilePhone()
   phone: string;
 
-  @IsStrongPassword({})
+  @IsStrongPassword()
   password: string;
 }

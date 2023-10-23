@@ -33,7 +33,10 @@ export class UsersRepository {
     return user;
   }
 
-  async update(userId: string, updateQuery: UpdateQuery<User>) {
+  async update(
+    userId: Types.ObjectId | string,
+    updateQuery: UpdateQuery<User>,
+  ) {
     const updatedUser = this.userModel
       .findByIdAndUpdate(userId, updateQuery, {
         new: true,
