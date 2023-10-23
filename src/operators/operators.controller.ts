@@ -13,7 +13,7 @@ import { OperatorsService } from './operators.service';
 import { CreateOperatorDto } from './dto/create-operator.dto';
 import { UpdateOperatorDto } from './dto/update-operator.dto';
 import { Request } from 'express';
-import { AccessTokenGuard } from 'src/auth/guards/access-token.guard';
+import { AccessTokenGuard } from 'src/guards/access-token.guard';
 import { ParseMongoIdPipe } from 'src/common/parse-objectId.pipe';
 import { JwtPayload } from 'src/auth/auth.service';
 

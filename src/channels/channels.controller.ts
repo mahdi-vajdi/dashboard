@@ -12,7 +12,7 @@ import { ChannelsService } from './channels.service';
 import { CreateChannelDto } from './dto/create-channel.dto';
 import { UpdateChannelMainSettingsDto } from './dto/channel-settings/update-main-settings.dto';
 import { Request } from 'express';
-import { AccessTokenGuard } from 'src/auth/guards/access-token.guard';
+import { AccessTokenGuard } from 'src/guards/access-token.guard';
 import { UpdateChannelWidgetSettingsDto } from './dto/channel-settings/update-widget-settings.dto';
 import { ParseMongoIdPipe } from 'src/common/parse-objectId.pipe';
 import { JwtPayload } from 'src/auth/auth.service';

@@ -1,6 +1,6 @@
 import { Body, Controller, Patch, Req, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { LocalAuthGuard } from 'src/auth/guards/local.guard';
+import { LocalAuthGuard } from 'src/guards/local.guard';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { Request } from 'express';
 import { User } from './models/user.schema';

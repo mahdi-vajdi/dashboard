@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { TeamsService } from './teams.service';
 import { CreateTeamDto } from './dto/create-team.dto';
-import { AccessTokenGuard } from 'src/auth/guards/access-token.guard';
+import { AccessTokenGuard } from 'src/guards/access-token.guard';
 import { DeleteTeamDto } from './dto/delete-team.dto';
 import { UpdateTeamDto } from './dto/update-team.dto';
 import { ParseMongoIdPipe } from 'src/common/parse-objectId.pipe';
