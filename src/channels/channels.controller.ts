@@ -35,8 +35,8 @@ export class ChannelsController {
   }
 
   @Get()
-  async findAll(@Req() req: Request) {
-    return this.channelsService.findAllByUser(req.user as JwtPayload);
+  async find(@Req() req: Request) {
+    return this.channelsService.findByUser(req.user as JwtPayload);
   }
 
   @Get(':id')

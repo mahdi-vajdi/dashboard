@@ -54,8 +54,8 @@ export class ChannelsService {
     return channel;
   }
 
-  async findAllByUser(currentUser: JwtPayload) {
-    return this.channelsRepository.findAll({ owner: currentUser.sub });
+  async findByUser(currentUser: JwtPayload) {
+    return this.channelsRepository.find({ owner: currentUser.sub });
   }
 
   async findOneById(_id: string) {

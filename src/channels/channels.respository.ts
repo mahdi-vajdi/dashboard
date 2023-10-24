@@ -35,7 +35,7 @@ export class ChannelsRepository {
     return savedChannel;
   }
 
-  async findAll(
+  async find(
     filterQuery: FilterQuery<Channel>,
     fields: ProjectionType<Channel> = {},
   ) {
