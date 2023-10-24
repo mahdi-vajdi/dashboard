@@ -9,6 +9,8 @@ import * as bcrypt from 'bcryptjs';
 import { OperatorsService } from 'src/operators/operators.service';
 import { User } from './models/user.schema';
 import { UpdatePasswordDto } from './dto/update-password.dto';
+import { JwtPayload } from 'src/auth/auth.service';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -44,6 +46,10 @@ export class UsersService {
 
   async findOneById(userId: string) {
     return this.usersRepository.findOne({ _id: userId });
+  }
+
+  async update(user: JwtPayload, dto: UpdateUserDto) {
+    return this.usersRepository.update(user.sub, dto);
   }
 
   async updatePassword(user: User, dto: UpdatePasswordDto) {
