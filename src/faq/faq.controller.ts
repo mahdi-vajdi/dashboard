@@ -12,8 +12,8 @@ import {
 import { FaqService } from './faq.service';
 import { CreateFaqDto } from './dto/create-faq.dto';
 import { UpdateFaqDto } from './dto/update-faq.dto';
-import { AccessTokenGuard } from 'src/guards/access-token.guard';
-import { ParseMongoIdPipe } from 'src/common/parse-objectId.pipe';
+import { AccessTokenGuard } from 'src/common/guards/access-token.guard';
+import { ParseMongoIdPipe } from 'src/common/pipes/parse-objectId.pipe';
 
 @UseGuards(AccessTokenGuard)
 @Controller('faq')
