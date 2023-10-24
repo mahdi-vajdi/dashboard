@@ -10,6 +10,7 @@ import { UpdateChannelWidgetSettingsDto } from './dto/channel-settings/update-wi
 import { TeamsService } from 'src/teams/teams.service';
 import { JwtPayload } from 'src/auth/auth.service';
 import { Types } from 'mongoose';
+import { UpdateChannelOperatorsDto } from './dto/update-operators.dto';
 
 @Injectable()
 export class ChannelsService {
@@ -53,23 +54,22 @@ export class ChannelsService {
     return channel;
   }
 
-  async findAll(currentUser: JwtPayload) {
-    return this.channelsRepository.findAllByUserId(currentUser.sub);
+  async findAllByUser(currentUser: JwtPayload) {
+    return this.channelsRepository.findAll({ owner: currentUser.sub });
   }
 
-  async findOne(id: string) {
-    return this.channelsRepository.findOneById(id);
+  async findOneById(_id: string) {
+    return this.channelsRepository.findOne({ _id });
   }
 
   async updateChannelOperators(
     currentUser: JwtPayload,
     channelId: string,
-    updateDto: any,
+    dto: UpdateChannelOperatorsDto,
   ) {
-    const channel = await this.channelsRepository.updateOneById(
-      currentUser.sub,
-      channelId,
-      updateDto,
+    const channel = await this.channelsRepository.findOneAndUpdate(
+      { owner: currentUser.sub, _id: channelId },
+      dto,
     );
     return {
       message: 'Successfully updated operators for the channel',

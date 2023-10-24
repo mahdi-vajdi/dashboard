@@ -1,7 +1,13 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Channel, ChannelDocument } from './models/channel.schema';
-import { Model, Types, UpdateQuery } from 'mongoose';
+import {
+  FilterQuery,
+  Model,
+  ProjectionType,
+  Types,
+  UpdateQuery,
+} from 'mongoose';
 import { Operator } from 'src/operators/models/operator.schema';
 import { ChannelSettingsEnum } from './channel-settings/channel-settings.enum';
 import { ChannelSettings } from './models/channel-settings.schema';
@@ -29,16 +35,22 @@ export class ChannelsRepository {
     return savedChannel;
   }
 
-  async findAllByUserId(userId: string) {
+  async findAll(
+    filterQuery: FilterQuery<Channel>,
+    fields: ProjectionType<Channel> = {},
+  ) {
     return await this.channelModel
-      .find({ owner: userId }, {}, { lean: true })
+      .find(filterQuery, fields, { lean: true })
       .populate<{ operators: Operator }>('operators')
       .exec();
   }
 
-  async findOneById(id: string) {
+  async findOne(
+    filterQuery: FilterQuery<Channel>,
+    fields: ProjectionType<Channel> = {},
+  ) {
     const channel = await this.channelModel
-      .findById(new Types.ObjectId(id), {}, { lean: true })
+      .findOne(filterQuery, fields, { lean: true })
       .populate<{ operators: Operator }>('operators')
       .exec();
 
@@ -47,13 +59,12 @@ export class ChannelsRepository {
     return channel;
   }
 
-  async updateOneById(
-    userId: string,
-    _id: string,
+  async findOneAndUpdate(
+    filterQuery: FilterQuery<Channel>,
     updateQuery: UpdateQuery<ChannelDocument>,
   ) {
     const updatedChannel = await this.channelModel
-      .findOneAndUpdate({ _id, owner: userId }, updateQuery, {
+      .findOneAndUpdate(filterQuery, updateQuery, {
         lean: true,
         new: true,
       })
