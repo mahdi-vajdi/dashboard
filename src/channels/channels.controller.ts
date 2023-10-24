@@ -10,10 +10,10 @@ import {
 } from '@nestjs/common';
 import { ChannelsService } from './channels.service';
 import { CreateChannelDto } from './dto/create-channel.dto';
-import { UpdateChannelMainSettingsDto } from './dto/channel-settings/update-main-settings.dto';
+import { ChannelMainSettingsDto } from './dto/channel-settings/main-settings.dto';
 import { Request } from 'express';
 import { AccessTokenGuard } from 'src/common/guards/access-token.guard';
-import { UpdateChannelWidgetSettingsDto } from './dto/channel-settings/update-widget-settings.dto';
+import { ChannelWidgetSettingsDto } from './dto/channel-settings/widget-settings.dto';
 import { ParseMongoIdPipe } from 'src/common/pipes/parse-objectId.pipe';
 import { JwtPayload } from 'src/auth/auth.service';
 import { UpdateChannelOperatorsDto } from './dto/update-operators.dto';
@@ -61,7 +61,7 @@ export class ChannelsController {
   async updateMainSettings(
     @Req() req: Request,
     @Param('id', ParseMongoIdPipe) id: string,
-    @Body() updateChannelDto: UpdateChannelMainSettingsDto,
+    @Body() updateChannelDto: ChannelMainSettingsDto,
   ) {
     return this.channelsService.updateMainSettings(
       req.user as JwtPayload,
@@ -74,7 +74,7 @@ export class ChannelsController {
   async updateWidgetSettings(
     @Req() req: Request,
     @Param('id', ParseMongoIdPipe) id: string,
-    @Body() updateChannelDto: UpdateChannelWidgetSettingsDto,
+    @Body() updateChannelDto: ChannelWidgetSettingsDto,
   ) {
     return this.channelsService.updateWidgetSettings(
       req.user as JwtPayload,

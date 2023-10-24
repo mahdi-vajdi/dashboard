@@ -105,7 +105,7 @@ class Position {
   rtlShowInMobile: boolean;
 }
 
-export class UpdateChannelWidgetSettingsDto {
+export class ChannelWidgetSettingsDto {
   @IsArray()
   @IsNotEmptyObject({}, { each: true })
   @ValidateNested({ each: true })

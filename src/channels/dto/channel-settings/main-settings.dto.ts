@@ -20,7 +20,7 @@ class InfoFrom {
   type: string;
 }
 
-export class UpdateChannelMainSettingsDto {
+export class ChannelMainSettingsDto {
   @IsString()
   @IsNotEmpty()
   logo: string;
