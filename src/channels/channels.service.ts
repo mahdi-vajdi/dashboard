@@ -24,7 +24,7 @@ export class ChannelsService {
     const operators =
       createChannelDto.addAllOperators === false
         ? []
-        : (await this.operatorsService.findAllByUser(currentUser)).map(
+        : (await this.operatorsService.findByAdmin(currentUser)).map(
             (operator) => operator._id,
           );
 

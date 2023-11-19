@@ -55,27 +55,26 @@ export class OperatorsService {
     });
   }
 
-  async findAllByUser(currentUser: JwtPayload) {
-    return this.operatorsRepository.findAllByUserId(currentUser.sub);
+  async findByAdmin(currentUser: JwtPayload) {
+    return this.operatorsRepository.find({ admin: currentUser.sub });
   }
 
-  async findOne(currentUser: JwtPayload, id: string) {
-    return this.operatorsRepository.findOneById(currentUser.sub, id);
+  async findOneById(currentUser: JwtPayload, _id: string) {
+    return this.operatorsRepository.findOne({ admin: currentUser.sub, _id });
   }
 
-  async update(
+  async findOneByIdAndUpdate(
     currentUser: JwtPayload,
-    id: string,
-    updateOperatorDto: UpdateOperatorDto,
+    _id: string,
+    dto: UpdateOperatorDto,
   ) {
-    return this.operatorsRepository.updateOne(
-      currentUser.sub,
-      id,
-      updateOperatorDto,
+    return this.operatorsRepository.findOneAndUpdate(
+      { admin: currentUser.sub, id: _id },
+      dto,
     );
   }
 
-  async remove(currentUser: JwtPayload, _id: string) {
-    return this.operatorsRepository.findOneAndDelete(currentUser.sub, _id);
+  async deleteOneById(currentUser: JwtPayload, _id: string) {
+    return this.operatorsRepository.deleteOne(currentUser.sub, _id);
   }
 }

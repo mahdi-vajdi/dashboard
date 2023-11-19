@@ -35,7 +35,7 @@ export class OperatorsController {
 
   @Get()
   async findAll(@Req() req: Request) {
-    return this.operatorsService.findAllByUser(req.user as JwtPayload);
+    return this.operatorsService.findByAdmin(req.user as JwtPayload);
   }
 
   @Get(':id')
@@ -43,7 +43,7 @@ export class OperatorsController {
     @Req() req: Request,
     @Param('id', ParseMongoIdPipe) id: string,
   ) {
-    return this.operatorsService.findOne(req.user as JwtPayload, id);
+    return this.operatorsService.findOneById(req.user as JwtPayload, id);
   }
 
   @Patch(':id')
@@ -52,7 +52,7 @@ export class OperatorsController {
     @Param('id', ParseMongoIdPipe) id: string,
     @Body() updateOperatorDto: UpdateOperatorDto,
   ) {
-    return this.operatorsService.update(
+    return this.operatorsService.findOneByIdAndUpdate(
       req.user as JwtPayload,
       id,
       updateOperatorDto,
@@ -61,6 +61,6 @@ export class OperatorsController {
 
   @Delete(':id')
   async remove(@Req() req: Request, @Param('id', ParseMongoIdPipe) id: string) {
-    return this.operatorsService.remove(req.user as JwtPayload, id);
+    return this.operatorsService.deleteOneById(req.user as JwtPayload, id);
   }
 }

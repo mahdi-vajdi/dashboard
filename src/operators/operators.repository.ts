@@ -1,7 +1,13 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { Operator } from './models/operator.schema';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types, UpdateQuery } from 'mongoose';
+import {
+  FilterQuery,
+  Model,
+  ProjectionType,
+  Types,
+  UpdateQuery,
+} from 'mongoose';
 
 @Injectable()
 export class OperatorsRepository {
@@ -23,15 +29,21 @@ export class OperatorsRepository {
     return savedOperator;
   }
 
-  async findAllByUserId(userId: string) {
+  async find(
+    filterQuery: FilterQuery<Operator>,
+    fields: ProjectionType<Operator> = {},
+  ) {
     return await this.operatorModel
-      .find({ admin: userId }, {}, { lean: true })
+      .find(filterQuery, fields, { lean: true })
       .exec();
   }
 
-  async findOneById(userId: string, _id: string) {
+  async findOne(
+    filterQuery: FilterQuery<Operator>,
+    fields: ProjectionType<Operator> = {},
+  ) {
     const operator = await this.operatorModel
-      .findOne({ admin: new Types.ObjectId(userId), _id }, {}, { lean: true })
+      .findOne(filterQuery, fields, { lean: true })
       .exec();
 
     if (!operator) throw new NotFoundException('Operator not found');
@@ -39,25 +51,24 @@ export class OperatorsRepository {
     return operator;
   }
 
-  async updateOne(
-    userId: string,
-    _id: string,
+  async findOneAndUpdate(
+    filterQuery: FilterQuery<Operator>,
     updateQuery: UpdateQuery<Operator>,
   ) {
     const updatedOperator = await this.operatorModel
-      .findOneAndUpdate({ admin: userId, _id }, updateQuery, {
+      .findOneAndUpdate(filterQuery, updateQuery, {
         lean: true,
         new: true,
       })
       .exec();
     if (!updatedOperator) {
-      this.logger.warn(`Could not find operator with id: ${_id}`);
+      this.logger.warn(`Could not find operator with criteria: ${filterQuery}`);
       throw new NotFoundException('Operator not found');
     }
     return updatedOperator;
   }
 
-  async findOneAndDelete(userId: string, _id: string) {
+  async deleteOne(userId: string, _id: string) {
     const deletedOperator = await this.operatorModel
       .deleteOne({ admin: userId, _id }, { lean: true })
       .exec();
